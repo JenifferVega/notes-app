@@ -1,26 +1,19 @@
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { db } from "../firebase";
+import { ListItem, ListItemText } from "@mui/material";
+import moment from "moment";
 
-const Notes = () => {
-  const [notes, setnotes] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const collectionRef = collection(db, "notes"); // mover a otra carpeta y reusar la funcion
-      const q = query(collectionRef, orderBy("title"));
-      const snapshot = await getDocs(q);
-      const documents = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      console.log("documents", documents);
-      setnotes(documents);
-    };
-    fetchData();
-  }, []);
+const Notes = ({ id, timestamp, title, details }) => {
   return (
     <div>
-      {notes.map((note) => (
-        <div key={note.id}>{note.title}</div>
-      ))}
+      <ListItem
+        sx={{ mt: 3, boxShadow: 3 }}
+        style={{ backgroundcolor: "#FAFAFA" }}
+      >
+        <ListItemText
+            primary ={title}
+            secondary= {moment(timestamp).format("MMMM do, yyyy")}
+        />
+      </ListItem>
     </div>
   );
 };

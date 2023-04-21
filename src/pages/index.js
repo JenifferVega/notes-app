@@ -1,4 +1,4 @@
-import Notes from "../components/Notes";
+import Notes from "../components/NotesList";
 import { Inter } from "next/font/google";
 import { Container } from "@mui/material";
 
@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
-    <Container>
+    <Container maxWidth="sm">
       <Notes/>
     </Container>
   );
