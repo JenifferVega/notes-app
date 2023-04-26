@@ -2,7 +2,7 @@ import { ListItem, ListItemText } from "@mui/material";
 import moment from "moment";
 
 
-const Notes = ({ id, timestamp, title, details }) => {
+const Notes = ({ id, timestamp, title, detail }) => {
   return (
     <div>
       <ListItem
@@ -11,7 +11,7 @@ const Notes = ({ id, timestamp, title, details }) => {
       >
         <ListItemText
             primary ={title}
-            secondary= {moment(timestamp).format("MMMM do, yyyy")}
+            secondary= {moment(timestamp).format("do MMMM, yyyy")}
         />
       </ListItem>
     </div>

@@ -1,29 +1,35 @@
 import { Button, TextField } from "@mui/material";
-import { collection, serverTimestamp, addDoc } from "firebase/firestore";
-import { useState } from "react";
-import { db } from "../firebase";
+import { useContext, useState } from "react";
+import { addNote } from "../utils/functionsNotesForm";
+import notesContent from "../pages/api/notesContent";
 
-const NotesForm = () => {
-  const [note, setnote] = useState({ title: "", detail: "" });
+const NotesForm = (props) => {
+  const [note, setNote] = useState({ title: "", detail: "" });
+  const {showAlert} = useContext(notesContent);
+
   const onSubmit = async () => {
-    const collectionRef = collection(db, "notes"); // mover a otra carpeta y reusar la funcion
-    const docRef = await addDoc(collectionRef, { ...note, timeStamp:
-    serverTimestamp() });
-    setnote({ tittle: '', detail: ''})
-    alert(`Todo with id ${docRef.id} is added succesfully`)
-    
+    if (!note.title) {
+      alert("Please enter a title");
+      return;
+    }
+    if (!note.detail) {
+      alert("Please enter a detail");
+      return;
+    }
+    const noteId = await addNote(note);
+    setNote({ title: "", detail: "" });
+    showAlert('success', `Todo with id ${noteId} is added successfully`);
+    props.onNewData();
   };
+
   return (
     <div>
-      {
-        //<pre>{JSON.stringify(note)}</pre>
-      }
       <TextField
         fullWidth
         label="title"
         margin="normal"
         value={note.title}
-        onChange={(e) => setnote({ ...note, title: e.target.value })}
+        onChange={(e) => setNote({ ...note, title: e.target.value })}
       />
       <TextField
         fullWidth
@@ -31,10 +37,14 @@ const NotesForm = () => {
         multiline
         maxRows={4}
         value={note.detail}
-        onChange={(e) => setnote({ ...note, detail: e.target.value })}
+        onChange={(e) => setNote({ ...note, detail: e.target.value })}
       />
-      <Button onClick={onSubmit} variant="contained" sx={{ mt: 3 }}>
-        create a new Note
+      <Button
+        onClick={onSubmit}
+        variant="contained"
+        sx={{ mt: 2 , backgroundColor: "#9400D3" }}
+      >
+        Add note
       </Button>
     </div>
   );

@@ -1,26 +1,31 @@
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
-import Notes  from "../components/Notes";
+import { getNotes } from "../utils/functionsNotesList";
+import Notes from "../components/Notes";
 
-const NotesList = () => {
+const NotesList = (props) => {
   const [notes, setnotes] = useState([]);
 
+  const fetchData = async () => {
+    const documents = await getNotes();
+    setnotes(documents);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const collectionRef = collection(db, "notes"); // mover a otra carpeta y reusar la funcion
-      const q = query(collectionRef, orderBy("title"));
-      const snapshot = await getDocs(q);
-      const documents = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      //console.log("documents", documents);
-      setnotes(documents);
-    };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if(props.reload){
+      fetchData();
+      props.reloadFunc(false);
+    }
+  }, [props.reload]);
+
   return (
     <div>
       {notes.map((note) => (
-        <Notes key={note.id}
+        <Notes
+          key={note.id}
           title={note.title}
           details={note.details}
           timeStamp={note.timeStamp}
