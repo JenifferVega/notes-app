@@ -7,6 +7,7 @@ const NotesList = (props) => {
 
   const fetchData = async () => {
     const documents = await getNotes();
+    console.log("documents", documents);
     setnotes(documents);
   };
 
@@ -15,7 +16,7 @@ const NotesList = (props) => {
   }, []);
 
   useEffect(() => {
-    if(props.reload){
+    if (props.reload) {
       fetchData();
       props.reloadFunc(false);
     }
@@ -26,8 +27,9 @@ const NotesList = (props) => {
       {notes.map((note) => (
         <Notes
           key={note.id}
+          id={note.id}
           title={note.title}
-          details={note.details}
+          detail={note.detail}
           timeStamp={note.timeStamp}
         />
       ))}
